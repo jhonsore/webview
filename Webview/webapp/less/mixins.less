@@ -1,0 +1,33 @@
+.font_base {
+    font-family: 'Roboto', sans-serif;
+}
+
+.background-size(@width, @height) {
+    @w : @width/2;
+    @h : @height/2;
+    -webkit-background-size: @w @h;
+       -moz-background-size: @w @h;
+         -o-background-size: @w @h;
+            background-size: @w @h;
+}
+
+.size_background_mobile(@width,@height) {
+    width: @width/2;
+    height: @height/2;
+}
+
+.border-radius(@radius) {
+    -webkit-border-radius: @radius;
+       -moz-border-radius: @radius;
+            border-radius: @radius;
+}
+.webkit-appearance(@val) {
+    -webkit-appearance: @val;
+       -moz-appearance: @val;
+            appearance: @val;
+}
+
+.background_position(@x,@y)
+{
+    background-position: -@x/2 -@y/2;
+}

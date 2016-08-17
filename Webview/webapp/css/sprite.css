@@ -1,0 +1,215 @@
+/*
+    * Use @import (reference) to import external files, but without adding
+    * the imported styles to the compiled output unless referenced.
+*/
+/*--------------------------------------------------*/
+/*                      ICONES                      */
+/*--------------------------------------------------*/
+.spt {
+  display: block;
+  background: url("../img/sprite.png") no-repeat 0 0;
+  -webkit-background-size: 300px 450px;
+  -moz-background-size: 300px 450px;
+  -o-background-size: 300px 450px;
+  background-size: 300px 450px;
+}
+.spt--logo-sm {
+  background-position: 0 -240px;
+  width: 95px;
+  height: 89.5px;
+}
+.spt--fb-login {
+  background-position: -261px 0;
+  width: 10px;
+  height: 21.5px;
+}
+.spt--logo-home {
+  background-position: 0 0;
+  width: 168px;
+  height: 158.5px;
+}
+.spt--arrow-left-menu {
+  background-position: -17.5px -164.5px;
+  width: 19.5px;
+  height: 19.5px;
+}
+.spt--search {
+  background-position: 0 -165.5px;
+  width: 16.5px;
+  height: 19.5px;
+}
+.spt--filter {
+  background-position: -35px -165.5px;
+  width: 16.5px;
+  height: 19.5px;
+}
+.spt--menu-top {
+  background-position: -55.5px -165.5px;
+  width: 10px;
+  height: 19.5px;
+}
+.spt--agroturismo {
+  background-position: -177.5px -24.5px;
+  width: 23px;
+  height: 30px;
+}
+.spt--bistros {
+  background-position: -207px -24px;
+  width: 23px;
+  height: 30px;
+}
+.spt--cafes {
+  background-position: -177px -55px;
+  width: 26.5px;
+  height: 30px;
+}
+.spt--cidades {
+  background-position: -210px -55px;
+  width: 20px;
+  height: 30px;
+}
+.spt--eco {
+  background-position: -236px -24px;
+  width: 22px;
+  height: 30px;
+}
+.spt--entretenimento {
+  background-position: -233px -55px;
+  width: 30px;
+  height: 21px;
+}
+.spt--hoteis {
+  background-position: -177px -89px;
+  width: 28px;
+  height: 27px;
+}
+.spt--passeios {
+  background-position: -212px -89px;
+  width: 22.5px;
+  height: 29.5px;
+}
+.spt--pontos-turisticos {
+  background-position: -237px -89px;
+  width: 28.5px;
+  height: 22.5px;
+}
+.spt--pousadas {
+  background-position: -176px -122px;
+  width: 28.5px;
+  height: 22.5px;
+}
+.spt--restaurantes {
+  background-position: -207.5px -122px;
+  width: 23.5px;
+  height: 23.5px;
+}
+.spt--rotas {
+  background-position: -234px -122px;
+  width: 28.5px;
+  height: 28.5px;
+}
+.spt--servicos-turisticos {
+  background-position: -179px -163.5px;
+  width: 22px;
+  height: 24px;
+}
+.spt--turismo {
+  background-position: -209px -163.5px;
+  width: 28px;
+  height: 29.5px;
+}
+.spt--calendar-sm {
+  background-position: -176px 0;
+  width: 15px;
+  height: 15px;
+}
+.spt--marker-sm {
+  background-position: -193px 0;
+  width: 11px;
+  height: 15px;
+}
+.spt--share {
+  background-position: -68px -167.5px;
+  width: 13.5px;
+  height: 14.5px;
+}
+.spt--tel {
+  background-position: -206px 0;
+  width: 15.5px;
+  height: 15px;
+}
+.spt--check-blue {
+  background-position: -224.5px 0;
+  width: 12.5px;
+  height: 11px;
+}
+.spt--logo-institucional {
+  background-position: -151.5px -310px;
+  width: 149px;
+  height: 140.5px;
+}
+.spt--trilhas {
+  background-position: -88px -163px;
+  width: 22.5px;
+  height: 29.5px;
+}
+.spt--circuito {
+  background-position: -113px -163.5px;
+  width: 24.5px;
+  height: 29.5px;
+}
+.spt--cultura {
+  background-position: -142px -163px;
+  width: 27px;
+  height: 21.5px;
+}
+.spt--taxis {
+  background-position: -143.5px -198px;
+  width: 27px;
+  height: 22px;
+}
+.spt--events {
+  background-position: -114.5px -198.5px;
+  width: 22.5px;
+  height: 26.5px;
+}
+.spt--fauna {
+  background-position: -266px -163.5px;
+  width: 29.5px;
+  height: 22px;
+}
+.spt--flora {
+  background-position: -243px -163.5px;
+  width: 19.5px;
+  height: 26.5px;
+}
+.spt--busola {
+  background-position: -212px -198px;
+  width: 24.5px;
+  height: 28.5px;
+}
+.spt--festivais {
+  background-position: -100.5px -230px;
+  width: 28px;
+  height: 22px;
+}
+.spt--mapas {
+  background-position: -87px -198.5px;
+  width: 27.5px;
+  height: 27px;
+}
+.spt--postos {
+  background-position: -241.5px -198px;
+  width: 27.5px;
+  height: 27px;
+}
+.spt--agencia {
+  background-position: -179.5px -198px;
+  width: 27.5px;
+  height: 25.5px;
+}
+.spt--turista {
+  background-position: -273px -198px;
+  width: 27.5px;
+  height: 25.5px;
+}
