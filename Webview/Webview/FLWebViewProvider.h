@@ -53,4 +53,10 @@
 */
 - (void) evaluateJavaScript: (NSString *) javaScriptString completionHandler: (void (^)(id, NSError *)) completionHandler;
 
+/*
+ * modified by jhonsore
+ * prevents page fom bounce when webview content is little than the page screen
+ */
+- (void) preventFromBounce;
+
 @end

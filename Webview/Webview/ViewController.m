@@ -36,6 +36,8 @@
         _webView = [[UIWebView alloc] initWithFrame: [[self view] bounds]];
     }
     
+    [[self webView] preventFromBounce];
+    
     // Add the webView to the current view.
     [[self view] addSubview: [self webView]];
     

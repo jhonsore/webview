@@ -19,4 +19,10 @@
 */
 - (void) setDelegateViews: (id <WKNavigationDelegate, WKUIDelegate>) delegateView;
 
+/*
+ * modified by jhonsore
+ * prevents page fom bounce when webview content is little than the page screen
+ */
+- (void) preventFromBounce;
+
 @end

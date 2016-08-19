@@ -21,6 +21,16 @@
 }
 
 /*
+ * modified by jhonsore
+ * prevents page fom bounce when webview content is little than the page screen
+ */
+- (void) preventFromBounce{
+    self.autoresizesSubviews = YES;
+    self.scrollView.scrollEnabled = NO;
+    self.scrollView.bounces = NO;
+}
+
+/*
  * Getter for the active request. UIWebView has this, but WKWebView does not, so we add it here.
 */
 - (NSURLRequest *) request

@@ -18,7 +18,19 @@
 */
 - (void) setDelegateViews: (id <UIWebViewDelegate>) delegateView
 {
+    
     [self setDelegate: delegateView];
+}
+
+/*
+ * modified by jhonsore
+ * prevents page fom bounce when webview content is little than the page screen
+ */
+- (void) preventFromBounce{
+    self.scalesPageToFit = YES;
+    self.autoresizesSubviews = YES;
+    self.scrollView.scrollEnabled = NO;
+    self.scrollView.bounces = NO;
 }
 
 /*
