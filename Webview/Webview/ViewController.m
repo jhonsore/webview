@@ -80,34 +80,27 @@
     NSString *urlStr = [NSString stringWithString:url];
     
     NSString *protocolPrefix = @"js2ios://";
-    
-    NSLog(@"processo url : %@",urlStr);
-    
-    //process only our custom protocol
     if ([[urlStr lowercaseString] hasPrefix:protocolPrefix])
     {
-        //strip protocol from the URL. We will get input to call a native method
         urlStr = [urlStr substringFromIndex:protocolPrefix.length];
         
-        //Decode the url string
         urlStr = [urlStr stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
         NSError *jsonError;
         
-        //parse JSON input in the URL
         NSDictionary *callInfo = [NSJSONSerialization
                                   JSONObjectWithData:[urlStr dataUsingEncoding:NSUTF8StringEncoding]
                                   options:kNilOptions
                                   error:&jsonError];
         
-        //check if there was error in parsing JSON input
         if (jsonError != nil)
         {
+            //call error callback function here
             NSLog(@"Error parsing JSON for the url %@",url);
             return NO;
         }
         
-        //Get function name. It is a required input
+        
         NSString *functionName = [callInfo objectForKey:@"functionname"];
         if (functionName == nil)
         {
@@ -119,9 +112,9 @@
         NSString *errorCallback = [callInfo objectForKey:@"error"];
         NSArray *argsArray = [callInfo objectForKey:@"args"];
         
-        [self callNativeFunction:functionName withArgs:argsArray onSuccess:successCallback onError:errorCallback];
         
-        //Do not load this url in the WebView
+        [self callFunction:functionName withArgs:argsArray onSuccess:successCallback onError:errorCallback];
+        
         return NO;
         
     }
@@ -129,53 +122,21 @@
     return YES;
 }
 
-- (void) callNativeFunction:(NSString *) name withArgs:(NSArray *) args onSuccess:(NSString *) successCallback onError:(NSString *) errorCallback
+- (void) callFunction:(NSString *) name withArgs:(NSArray *) args onSuccess:(NSString *) successCallback onError:(NSString *) errorCallback
 {
+    NSError *error;
     
-    //AppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
+    id retVal = [self processFunctionFromJS:name withArgs:args error:&error];
     
-    //We only know how to process setDataUser
-    if ([name compare:@"setDataUser" options:NSCaseInsensitiveSearch] == NSOrderedSame)
+    if (error != nil)
     {
-        if (args.count > 0)
-        {
-            /*NSString *resultStr = [NSString stringWithFormat:@"%@", [args objectAtIndex:0]];
-             NSData *objectData = [resultStr dataUsingEncoding:NSUTF8StringEncoding];
-             NSDictionary *jsonResponse = [NSJSONSerialization JSONObjectWithData:objectData
-             options:kNilOptions
-             error:nil];*/
-            
-        }
-        else
-        {
-            NSString *resultStr = [NSString stringWithFormat:@"Error calling function %@. Error : Missing argument", name];
-            [self callErrorCallback:errorCallback withMessage:resultStr];
-        }
-    }
-    else if ([name compare:@"initApp" options:NSCaseInsensitiveSearch] == NSOrderedSame)
-    {
-        
-        NSLog(@"app chamado");
-        /*UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Init app"
-         message:@"App iniciado"
-         delegate:self
-         cancelButtonTitle:@"OK"
-         otherButtonTitles:nil];
-         [alert show];*/
-         NSMutableDictionary *dic = [NSMutableDictionary
-         dictionaryWithDictionary:@{
-         @"item" : @"value"
-         }];
-
-        [self callJSFunction:@"callJS" withArgs:dic];
-    }
-    else
-    {
-        //Unknown function called from JavaScript
-        NSString *resultStr = [NSString stringWithFormat:@"Cannot process function %@. Function not found", name];
+        NSString *resultStr = [NSString stringWithString:error.localizedDescription];
         [self callErrorCallback:errorCallback withMessage:resultStr];
-        
+        return;
     }
+    
+    [self callSuccessCallback:successCallback withRetValue:retVal forFunction:name];
+    
 }
 
 -(void) callErrorCallback:(NSString *) name withMessage:(NSString *) msg
@@ -184,9 +145,8 @@
     {
         //call error handler
         
-        NSMutableDictionary *resultDict = [[NSMutableDictionary alloc] init];
-        [resultDict setObject:msg forKey:@"error"];
-        [self callJSFunction:name withArgs:resultDict];
+        [[self webView] evaluateJavaScript:[NSString stringWithFormat:@"%@('%@');",name,msg] completionHandler:nil];
+        
     }
     else
     {
@@ -197,15 +157,13 @@
 
 -(void) callSuccessCallback:(NSString *) name withRetValue:(id) retValue forFunction:(NSString *) funcName
 {
-    
     if (name != nil)
     {
-        //call succes handler
+        retValue = (retValue) ? retValue : [NSMutableDictionary dictionary];
         
-        NSMutableDictionary *resultDict = [[NSMutableDictionary alloc] init];
+        NSMutableDictionary *resultDict = [NSMutableDictionary dictionary];
         [resultDict setObject:retValue forKey:@"result"];
-        
-        NSLog(@"%@",[resultDict objectForKey:@"CPF"]);
+        [self callJSFunction:name withArgs:resultDict];
         
     }
     else
@@ -228,18 +186,65 @@
         return;
     }
     
-    //initWithBytes:length:encoding
     NSString *jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     
-    NSLog(@"jsonStr = %@", jsonStr);
+    //NSLog(@"jsonStr = %@", jsonStr);
     
     if (jsonStr == nil)
     {
         NSLog(@"jsonStr is null. count = %lu", (unsigned long)[args count]);
     }
     
-    //[[self webView]  stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"%@('%@');",name,jsonStr]];
     [[self webView] evaluateJavaScript:[NSString stringWithFormat:@"%@('%@');",name,jsonStr] completionHandler:nil];
+    
+}
+
+- (void) createError:(NSError**) error withMessage:(NSString *) msg
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setValue:msg forKey:NSLocalizedDescriptionKey];
+    
+    *error = [NSError errorWithDomain:@"JSiOSBridgeError" code:-1 userInfo:dict];
+    
+}
+
+-(void) createError:(NSError**) error withCode:(int) code withMessage:(NSString*) msg
+{
+    NSMutableDictionary *msgDict = [NSMutableDictionary dictionary];
+    [msgDict setValue:[NSNumber numberWithInt:code] forKey:@"code"];
+    [msgDict setValue:msg forKey:@"message"];
+    
+    NSError *jsonError;
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:msgDict options:0 error:&jsonError];
+    
+    if (jsonError != nil)
+    {
+        //call error callback function here
+        NSLog(@"Error creating JSON from error message  : %@",[jsonError localizedDescription]);
+        return;
+    }
+    
+    NSString *jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
+    
+    [self createError:error withMessage:jsonStr];
+}
+
+- (id) processFunctionFromJS:(NSString *) name withArgs:(NSArray*) args error:(NSError **) error
+{
+    if ([name compare:@"initApp" options:NSCaseInsensitiveSearch] == NSOrderedSame)
+    {
+        NSArray *listElements = @[@"Item 1", @"Item 2"];
+        
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:listElements options:0 error:nil];
+        
+        NSString *result = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        
+        return result;
+    }
+    
+    return nil;
 }
 
 #pragma mark - UIWebView Delegate Methods
@@ -378,6 +383,13 @@
 - (void) finishLoadOrNavigation: (NSURLRequest *) request
 {
     // Remove the loading indicator, maybe update the navigation bar's title if you have one.
+    
+    NSMutableDictionary *dic = [NSMutableDictionary
+                                dictionaryWithDictionary:@{
+                                                           @"item" : @"some value"
+                                                           }];
+    
+    [self callJSFunction:@"callJS" withArgs:dic];
     
 }
 

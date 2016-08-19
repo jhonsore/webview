@@ -14,45 +14,10 @@
 	App.prototype.calliOSInit = function (){
 		var dataStr = '';
 
-            calliOSFunction("initApp", [],function(ret){
-                 //var listValues = JSON.parse(ret.result);
+            calliOSFunction("initApp", [],function(__result__){
+                //var _t = $.parseJSON( __result__ );
+                myApp.alert(__result__,"Value from ios:");
             }, onErrorCallingNativeFunction);
-	}
-	 /*
-	App.prototype.callList = function(__arg__){
-		var _json;
-		var _dados;
-		
-		try {
-			_json = $.parseJSON( __arg__ );
-			_dados = _json.dados;
-			
-			var myList = myApp.virtualList('.list-block.virtual-list', {
-			// Array with items data
-			items: _dados,
-			// Template 7 template to render each item
-			template: '<li class="item-content">' +
-			'<div class="item-media">{{nome}}</div>' +
-			'<div class="item-media">{{idade}}</div>' +
-			'<div class="item-media">{{profession}}</div>' +
-			'<div class="item-inner">' +
-			'<div class="item-title">{{texto}}</div>' +
-			'</div>' +
-			'</li>'
-			});
-		}
-		catch(err) {
-			alert(err);
-		}
-		
-	}*/
- 
-    function onErrorCallingNativeFunction (err)
-	{
-        if (err)
-        {
-            alert(err.message);
-        }
 	}
 
     //---------------------------------------
@@ -85,10 +50,18 @@ var mainView = myApp.addView('.view-main', {
 	// Enable Dom Cache so we can use all inline pages
 	domCache: true
                              });
+
+//ios to js
+function onErrorCallingNativeFunction (err){
+    if (err)
+    {
+        alert(err.message);
+    }
+}
  
 function callJS (__arg__){
     
-    $(".page-login").html("**** js was invoked *****<br><br>"+__arg__);
+    $(".page-login").html("<br><br>**** js was invoked fom ios *****<br><br>Value:<br><br>"+__arg__);
 }
 
  
