@@ -6,7 +6,7 @@ __functionIndexMap = {};
 
 function calliOSFunction(functionName, args, successCallback, errorCallback)
 {
-    var url = "js2ios://";
+    var url = "js2ios:";
     
     var callInfo = {};
     callInfo.functionname = functionName;
